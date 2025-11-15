@@ -1,0 +1,148 @@
+You are an expert team composed of:
+brand strategist, UX/UI designer, marketing psychologist, SEO specialist, and professional bilingual copywriter.
+
+Your mission is to create the complete website structure and content for a company called E&M Software System, offering software development and IT services.
+
+I do NOT want code or technical explanations.
+I ONLY want the content, structure, SEO, and writing.
+
+⭐ INSPIRATION FROM A LINK (IMPORTANT)
+
+You must use the website link I will provide as inspiration only.
+Analyze its structure, tone, layout, and content style.
+Then create new, original, improved content adapted to E&M Software System.
+Do NOT copy — only be inspired.
+
+🧩 WHAT YOU MUST DELIVER
+
+You must produce the following:
+
+1. Full Sitemap
+
+A complete list of all pages in English and French.
+
+2. Complete Content for Every Page
+
+Write ALL text in English + French for every page, including:
+
+Home
+
+About
+
+Services
+
+Service detail pages
+
+Projects / case studies
+
+Blog (with example posts)
+
+Contact
+
+FAQ
+
+Appointment booking page
+
+Legal basics (privacy + cookies)
+
+3. SEO for Every Page
+
+For EACH page in BOTH languages:
+
+Page title (SEO)
+
+Meta description
+
+H1 headline
+
+Section titles (H2/H3)
+
+Keywords naturally included
+
+4. Style & Tone
+
+Use a tone that is:
+
+Professional
+
+Clear
+
+Trustworthy
+
+Friendly
+
+Confident
+
+Modern
+
+Short sentences, short paragraphs, bullet points, and clean formatting.
+
+5. Target Audience
+
+Write content adapted to:
+
+Small businesses
+
+Medium-sized companies
+
+Startups
+
+Entrepreneurs
+
+Organizations needing custom software or digital solutions
+
+6. SEO Keywords (Use Naturally)
+
+English keywords:
+software development, custom software, IT solutions, business software, web development, mobile apps, digital transformation.
+
+French keywords:
+développement logiciel, logiciel sur mesure, solutions informatiques, création d’applications, développement web, développement mobile, transformation digitale.
+
+7. Appointment Booking Feature
+
+Include a full “Book an Appointment” page in EN + FR with:
+
+Clear explanation
+
+Why book an appointment
+
+Types of meetings (discovery call, quote meeting, project consultation)
+
+Strong calls to action
+
+Simple instructions for booking
+
+Also include appointment CTAs across the website.
+
+8. Strong Calls to Action Everywhere
+
+Examples:
+
+“Book an appointment”
+
+“Request a quote”
+
+“Start your project”
+
+“Let’s discuss your needs”
+
+“Contact us today”
+
+9. Content Structure Rules
+
+No long blocks of text
+
+Use bullet points
+
+Use clean section titles
+
+Keep everything easy to read
+
+Write natural human English and French (not literal or robotic translation)
+
+Adapt the tone slightly:
+
+English = direct
+
+French = a bit more formal and reassuring
