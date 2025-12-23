@@ -1,20 +1,30 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'wouter';
-import { Calendar, Clock, Search, Mail, ArrowRight } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Search, ArrowUp } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
-import { blogPosts } from '@/data/content';
+import { useBlogPosts } from '@/hooks/use-blog-posts';
 import { motion } from 'framer-motion';
+import FeaturedArticle from '@/components/blog/FeaturedArticle';
+import SecondaryFeatured from '@/components/blog/SecondaryFeatured';
+import SearchBar from '@/components/blog/SearchBar';
+import CategoryPills from '@/components/blog/CategoryPills';
+import ArticleGrid from '@/components/blog/ArticleGrid';
+import NewsletterCTA from '@/components/blog/NewsletterCTA';
 
 export default function Blog() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
+  const { data: blogPosts = [], isLoading } = useBlogPosts();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [email, setEmail] = useState('');
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  // Scroll tracking for back to top button
+  useState(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  });
 
   const categories = useMemo(() => {
     const cats = new Map<string, { label: string; count: number }>();
@@ -23,356 +33,225 @@ export default function Blog() {
       if (existing) {
         existing.count++;
       } else {
-        cats.set(post.category, { label: post.categoryLabel[language], count: 1 });
+        cats.set(post.category, { label: post.categoryLabel, count: 1 });
       }
     });
     return Array.from(cats.entries()).map(([id, data]) => ({ id, ...data }));
-  }, [language]);
+  }, [blogPosts]);
 
   const filteredPosts = useMemo(() => {
-    return blogPosts.filter((post) => {
+    let posts = blogPosts.filter((post) => {
       const matchesSearch = searchQuery === '' ||
-        post.title[language].toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.excerpt[language].toLowerCase().includes(searchQuery.toLowerCase());
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
       
       const matchesCategory = !selectedCategory || post.category === selectedCategory;
       
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, selectedCategory, language]);
 
-  const featuredPost = blogPosts[0];
-  const regularPosts = filteredPosts;
+    // Remove duplicates by slug
+    const uniquePosts = Array.from(
+      new Map(posts.map(post => [post.slug, post])).values()
+    );
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Newsletter signup:', email);
-    setEmail('');
+    return uniquePosts;
+  }, [searchQuery, selectedCategory, blogPosts]);
+
+  // Separate featured and regular articles
+  const featuredArticle = filteredPosts[0];
+  const secondaryFeatured = filteredPosts.slice(1, 3);
+  const regularArticles = filteredPosts.slice(3);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen pt-16">
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-b from-primary/5 to-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background">
+      {/* Hero Header Area */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-primary/5 to-background pt-24 pb-20 border-b">
+        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03]" />
+        <div className="container mx-auto px-6 lg:px-16 max-w-[1320px] relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center max-w-3xl mx-auto"
+            className="text-center"
           >
-            <h1 className="text-5xl lg:text-6xl font-bold text-foreground mb-6">
-              {t({ en: 'Our Blog', fr: 'Notre Blog' })}
+            <h1 className="mb-4 text-5xl md:text-6xl font-bold tracking-[-1.5px] text-foreground">
+              {t({ en: 'Insights & Innovations', fr: 'Insights & Innovations' })}
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
+            
+            <p className="mx-auto mb-8 max-w-[680px] text-xl leading-relaxed text-muted-foreground">
               {t({
-                en: 'Insights, tutorials, and industry news from our team of experts.',
-                fr: 'Insights, tutoriels et actualités de l\'industrie de notre équipe d\'experts.'
+                en: 'Explore our latest thoughts on technology, design and digital innovation',
+                fr: 'Explorez nos dernières réflexions sur la technologie, le design et l\'innovation digitale'
               })}
             </p>
 
-            {/* Search Bar */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative max-w-2xl mx-auto"
-            >
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder={t({ en: 'Search articles...', fr: 'Rechercher des articles...' })}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 pr-4 py-6 text-lg"
-              />
-            </motion.div>
+            {/* Stats Bar */}
+            <div className="flex items-center justify-center gap-8 text-sm text-muted-foreground">
+              <span className="font-medium">{blogPosts.length} Articles</span>
+              <span className="h-4 w-px bg-border" />
+              <span className="font-medium">{categories.length} Catégories</span>
+              <span className="h-4 w-px bg-border" />
+              <span className="font-medium">12 Contributeurs</span>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Featured Post */}
-      {!searchQuery && !selectedCategory && featuredPost && (
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="text-3xl font-bold text-foreground mb-8">
-                {t({ en: 'Featured Article', fr: 'Article en Vedette' })}
-              </h2>
-              <Link href={`/blog/${featuredPost.slug}`}>
-                <motion.div whileHover={{ y: -5 }}>
-                  <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 group">
-                    <div className="grid md:grid-cols-2 gap-0">
-                      <div className="aspect-[4/3] md:aspect-auto overflow-hidden bg-muted">
-                        <motion.img
-                          src={`/attached_assets/generated_images/${featuredPost.image}`}
-                          alt={featuredPost.title[language]}
-                          className="w-full h-full object-cover"
-                          whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.4 }}
-                        />
-                      </div>
-                      <div className="p-8 flex flex-col justify-center">
-                        <Badge variant="secondary" className="w-fit mb-4">
-                          {featuredPost.categoryLabel[language]}
-                        </Badge>
-                        <h3 className="text-3xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
-                          {featuredPost.title[language]}
-                        </h3>
-                        <p className="text-muted-foreground mb-6 line-clamp-3">
-                          {featuredPost.excerpt[language]}
-                        </p>
-                        <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-2">
-                            <Avatar className="h-8 w-8">
-                              <AvatarImage src={featuredPost.authorAvatar} alt={featuredPost.author} />
-                              <AvatarFallback>{featuredPost.author[0]}</AvatarFallback>
-                            </Avatar>
-                            <span>{featuredPost.author}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
-                            <span>{new Date(featuredPost.publishedDate).toLocaleDateString(language)}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4" />
-                            <span>{featuredPost.readTime} min</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              </Link>
-            </motion.div>
-          </div>
-        </section>
-      )}
+      {/* Search & Filter Control Bar - Sticky */}
+      <section className="sticky top-20 z-40 border-b bg-background/95 backdrop-blur-md">
+        <div className="container mx-auto px-6 lg:px-16 max-w-[1320px]">
+          <div className="flex items-center gap-8 py-5 overflow-x-auto">
+            {/* Search Bar */}
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+            />
 
-      {/* Main Content with Sidebar */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-3 gap-12">
-            {/* Blog Posts */}
-            <div className="lg:col-span-2">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-bold text-foreground">
-                  {selectedCategory
-                    ? categories.find(c => c.id === selectedCategory)?.label
-                    : t({ en: 'All Articles', fr: 'Tous les Articles' })}
-                </h2>
-                <span className="text-sm text-muted-foreground">
-                  {filteredPosts.length} {t({ en: 'articles', fr: 'articles' })}
-                </span>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {regularPosts.map((post, index) => (
-                  <motion.div
-                    key={post.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ y: -8 }}
-                  >
-                    <Link href={`/blog/${post.slug}`}>
-                      <Card className="overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 group">
-                        <div className="aspect-[16/9] overflow-hidden bg-muted">
-                          <motion.img
-                            src={`/attached_assets/generated_images/${post.image}`}
-                            alt={post.title[language]}
-                            className="w-full h-full object-cover"
-                            whileHover={{ scale: 1.1 }}
-                            transition={{ duration: 0.4 }}
-                          />
-                        </div>
-                        <CardHeader className="flex-grow">
-                          <div className="flex items-center gap-2 mb-3">
-                            <Badge variant="secondary">{post.categoryLabel[language]}</Badge>
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Calendar className="h-3 w-3" />
-                              <span>{new Date(post.publishedDate).toLocaleDateString(language)}</span>
-                            </div>
-                          </div>
-                          <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                            {post.title[language]}
-                          </h3>
-                          <p className="text-muted-foreground line-clamp-2">
-                            {post.excerpt[language]}
-                          </p>
-                        </CardHeader>
-                        <CardFooter className="flex items-center justify-between border-t border-border pt-4">
-                          <div className="flex items-center gap-2">
-                            <Avatar className="h-8 w-8">
-                              <AvatarImage src={post.authorAvatar} alt={post.author} />
-                              <AvatarFallback>{post.author[0]}</AvatarFallback>
-                            </Avatar>
-                            <span className="text-sm text-muted-foreground">{post.author}</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <Clock className="h-4 w-4" />
-                            <span>{post.readTime} min</span>
-                          </div>
-                        </CardFooter>
-                      </Card>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-
-              {filteredPosts.length === 0 && (
-                <div className="text-center py-16">
-                  <p className="text-muted-foreground text-lg">
-                    {t({ en: 'No articles found matching your search.', fr: 'Aucun article trouvé correspondant à votre recherche.' })}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-8">
-              {/* Categories */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <h3 className="text-xl font-semibold text-foreground">
-                      {t({ en: 'Categories', fr: 'Catégories' })}
-                    </h3>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <button
-                      onClick={() => setSelectedCategory(null)}
-                      className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                        selectedCategory === null
-                          ? 'bg-primary text-primary-foreground'
-                          : 'hover:bg-muted text-foreground'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span>{t({ en: 'All Articles', fr: 'Tous les Articles' })}</span>
-                        <span className="text-sm">{blogPosts.length}</span>
-                      </div>
-                    </button>
-                    {categories.map((category) => (
-                      <button
-                        key={category.id}
-                        onClick={() => setSelectedCategory(category.id)}
-                        className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                          selectedCategory === category.id
-                            ? 'bg-primary text-primary-foreground'
-                            : 'hover:bg-muted text-foreground'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span>{category.label}</span>
-                          <span className="text-sm">{category.count}</span>
-                        </div>
-                      </button>
-                    ))}
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Newsletter Signup */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-                  <CardHeader>
-                    <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                      <Mail className="h-6 w-6 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-foreground">
-                      {t({ en: 'Stay Updated', fr: 'Restez Informé' })}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t({
-                        en: 'Get the latest articles delivered straight to your inbox.',
-                        fr: 'Recevez les derniers articles directement dans votre boîte de réception.'
-                      })}
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleNewsletterSubmit} className="space-y-3">
-                      <Input
-                        type="email"
-                        placeholder={t({ en: 'Your email address', fr: 'Votre adresse e-mail' })}
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
-                      <Button type="submit" className="w-full gap-2">
-                        {t({ en: 'Subscribe', fr: 'S\'abonner' })}
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    </form>
-                    <p className="text-xs text-muted-foreground mt-3">
-                      {t({
-                        en: 'No spam. Unsubscribe anytime.',
-                        fr: 'Pas de spam. Désabonnez-vous à tout moment.'
-                      })}
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Recent Posts */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <h3 className="text-xl font-semibold text-foreground">
-                      {t({ en: 'Recent Posts', fr: 'Articles Récents' })}
-                    </h3>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {blogPosts.slice(0, 3).map((post) => (
-                      <Link key={post.id} href={`/blog/${post.slug}`}>
-                        <div className="flex gap-3 group cursor-pointer">
-                          <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                            <img
-                              src={`/attached_assets/generated_images/${post.image}`}
-                              alt={post.title[language]}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors text-sm">
-                              {post.title[language]}
-                            </h4>
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                              <Calendar className="h-3 w-3" />
-                              <span>{new Date(post.publishedDate).toLocaleDateString(language, { month: 'short', day: 'numeric' })}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </CardContent>
-                </Card>
-              </motion.div>
+            {/* Category Pills */}
+            <div className="flex-1 min-w-0">
+              <CategoryPills
+                categories={categories}
+                activeCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+              />
             </div>
           </div>
         </div>
       </section>
+
+      {/* Featured Spotlight Zone */}
+      {!isLoading && filteredPosts.length > 0 && (
+        <section className="py-16">
+          <div className="container mx-auto px-6 lg:px-16 max-w-[1320px]">
+            <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
+              {/* Hero Featured Article */}
+              {featuredArticle && (
+                <FeaturedArticle
+                  slug={featuredArticle.slug}
+                  title={featuredArticle.title}
+                  excerpt={featuredArticle.excerpt}
+                  image={featuredArticle.image || ''}
+                  category={featuredArticle.categoryLabel}
+                  author={{
+                    name: featuredArticle.author,
+                    avatar: featuredArticle.authorObject?.avatar || featuredArticle.authorAvatar || "/default-avatar.svg",
+                    slug: featuredArticle.authorObject?.slug
+                  }}
+                  publishedAt={featuredArticle.publishedDate}
+                  readTime={featuredArticle.readTime}
+                />
+              )}
+
+              {/* Secondary Featured Stack */}
+              <div className="flex flex-col gap-6">
+                {secondaryFeatured.map((article, index) => (
+                  <SecondaryFeatured
+                    key={article.slug}
+                    slug={article.slug}
+                    title={article.title}
+                    excerpt={article.excerpt}
+                    image={article.image || ''}
+                    category={article.categoryLabel}
+                    author={{
+                      name: article.author,
+                      avatar: article.authorObject?.avatar || article.authorAvatar || "/default-avatar.svg",
+                      slug: article.authorObject?.slug
+                    }}
+                    publishedAt={article.publishedDate}
+                    readTime={article.readTime}
+                    index={index}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Latest Articles Grid */}
+      <section className="py-12 pb-24 bg-background">
+        <div className="container mx-auto px-6 lg:px-16 max-w-[1320px]">
+          {/* Section Header */}
+          <h2 className="mb-12 text-[42px] font-bold text-foreground">
+            {t({ en: 'Latest Articles', fr: 'Derniers Articles' })}
+          </h2>
+
+          {/* Loading State */}
+          {isLoading ? (
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="mb-4 h-60 rounded-[20px] bg-gradient-to-r from-muted via-muted/50 to-muted bg-[length:200%_100%]" style={{ animation: 'shimmer 1.5s infinite' }}></div>
+                  <div className="mb-3 h-6 w-3/4 rounded bg-muted"></div>
+                  <div className="mb-2 h-4 w-full rounded bg-muted"></div>
+                  <div className="h-4 w-2/3 rounded bg-muted"></div>
+                </div>
+              ))}
+            </div>
+          ) : filteredPosts.length === 0 ? (
+            <div className="py-24 text-center">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+                <Search className="h-10 w-10 text-muted-foreground" />
+              </div>
+              <h3 className="mb-3 text-2xl font-bold text-foreground">
+                {t({ en: 'No articles found', fr: 'Aucun article trouvé' })}
+              </h3>
+              <p className="mb-6 text-muted-foreground">
+                {t({
+                  en: 'Try adjusting your search or filters',
+                  fr: 'Essayez d\'ajuster votre recherche ou vos filtres'
+                })}
+              </p>
+              <button
+                onClick={() => {
+                  setSelectedCategory(null);
+                  setSearchQuery('');
+                }}
+                className="rounded-full bg-primary px-8 py-3 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-1 hover:shadow-lg"
+              >
+                {t({ en: 'Clear filters', fr: 'Effacer les filtres' })}
+              </button>
+            </div>
+          ) : (
+            <ArticleGrid articles={regularArticles} />
+          )}
+        </div>
+      </section>
+
+      {/* Newsletter CTA */}
+      <NewsletterCTA />
+
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
+        >
+          <ArrowUp className="h-5 w-5" />
+        </motion.button>
+      )}
+
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 }

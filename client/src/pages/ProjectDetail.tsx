@@ -146,11 +146,14 @@ export default function ProjectDetail() {
               fr: 'Discutons de la façon dont nous pouvons vous aider à atteindre vos objectifs.'
             })}
           </p>
-          <Link href="/book-appointment">
-            <Button size="lg" data-testid="button-cta-appointment">
-              {t({ en: 'Book Free Consultation', fr: 'Réserver une Consultation Gratuite' })}
-            </Button>
-          </Link>
+          <Button 
+            size="lg" 
+            data-testid="button-cta-appointment"
+            data-cal-link="emsoftware-system-dlwqri/30min"
+            data-cal-config='{"layout":"column_view"}'
+          >
+            {t({ en: 'Book Free Consultation', fr: 'Réserver une Consultation Gratuite' })}
+          </Button>
         </div>
       </section>
     </div>

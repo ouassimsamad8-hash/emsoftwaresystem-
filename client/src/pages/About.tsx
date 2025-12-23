@@ -1,12 +1,14 @@
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Mail, Phone, Linkedin } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/lib/language-context';
+import { teamMembers } from '@/data/content';
 import teamImage from '@assets/generated_images/Team_meeting_collaboration_dfc2f0e9.png';
 import officeImage from '@assets/generated_images/Modern_office_interior_7cc1ed85.png';
 
 export default function About() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const values = [
     {
@@ -37,13 +39,6 @@ export default function About() {
         fr: 'Transparence et honnêteté dans toutes nos pratiques commerciales.'
       })
     }
-  ];
-
-  const team = [
-    { name: 'Sarah Chen', role: t({ en: 'CEO & Founder', fr: 'PDG & Fondatrice' }), avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' },
-    { name: 'Michael Rodriguez', role: t({ en: 'CTO', fr: 'Directeur Technique' }), avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Michael' },
-    { name: 'Emma Thompson', role: t({ en: 'Lead Designer', fr: 'Designer Principal' }), avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma' },
-    { name: 'David Kim', role: t({ en: 'Senior Developer', fr: 'Développeur Senior' }), avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=David' }
   ];
 
   return (
@@ -147,15 +142,53 @@ export default function About() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, index) => (
-              <div key={index} className="text-center" data-testid={`team-member-${index}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+            {teamMembers.sort((a, b) => a.order - b.order).map((member, index) => (
+              <div key={member.id} className="text-center" data-testid={`team-member-${index}`}>
                 <Avatar className="h-32 w-32 mx-auto mb-4">
                   <AvatarImage src={member.avatar} alt={member.name} />
                   <AvatarFallback>{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                 </Avatar>
                 <h3 className="text-lg font-semibold text-foreground mb-1">{member.name}</h3>
-                <p className="text-muted-foreground">{member.role}</p>
+                <p className="text-muted-foreground mb-3">{member.role[language]}</p>
+                <div className="flex justify-center gap-2">
+                  {member.email && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      asChild
+                    >
+                      <a href={`mailto:${member.email}`} title="Email">
+                        <Mail className="h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                  {member.phone && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      asChild
+                    >
+                      <a href={`tel:${member.phone}`} title="Phone">
+                        <Phone className="h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                  {member.linkedin && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      asChild
+                    >
+                      <a href={member.linkedin} target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                        <Linkedin className="h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

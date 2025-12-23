@@ -1,0 +1,235 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "E&M Software Blog API",
+    "description": "API pour accéder aux articles, auteurs et statistiques du blog E&M Software",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://brake-cubic-with-flashing.trycloudflare.com/api",
+      "description": "Serveur de développement (Cloudflare Tunnel)"
+    }
+  ],
+  "paths": {
+    "/blog-posts": {
+      "get": {
+        "operationId": "getBlogPosts",
+        "summary": "Liste tous les articles du blog",
+        "description": "Récupère la liste des articles de blog avec pagination, tri et population des relations",
+        "parameters": [
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "Relations à populer (ex: author, seo)",
+            "schema": {
+              "type": "string",
+              "default": "*"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Tri des résultats (ex: publishedAt:desc, title:asc)",
+            "schema": {
+              "type": "string",
+              "default": "publishedAt:desc"
+            }
+          },
+          {
+            "name": "pagination[page]",
+            "in": "query",
+            "description": "Numéro de page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pagination[pageSize]",
+            "in": "query",
+            "description": "Nombre d'articles par page",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des articles récupérée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BlogPost"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "operationId": "getAuthors",
+        "summary": "Liste tous les auteurs du blog",
+        "description": "Récupère la liste de tous les auteurs avec leurs profils et statistiques",
+        "parameters": [
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "Relations à populer",
+            "schema": {
+              "type": "string",
+              "default": "*"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des auteurs récupérée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Author"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BlogPost": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "description": "ID unique de l'article"
+          },
+          "title_fr": {
+            "type": "string",
+            "description": "Titre de l'article en français"
+          },
+          "content_fr": {
+            "type": "string",
+            "description": "Contenu complet de l'article en français"
+          },
+          "excerpt_fr": {
+            "type": "string",
+            "description": "Extrait/résumé de l'article"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug URL de l'article"
+          },
+          "category": {
+            "type": "string",
+            "description": "Catégorie de l'article"
+          },
+          "categoryLabel_fr": {
+            "type": "string",
+            "description": "Label de la catégorie en français"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date de publication"
+          },
+          "readTime": {
+            "type": "integer",
+            "description": "Temps de lecture estimé en minutes"
+          },
+          "author": {
+            "type": "object",
+            "description": "Auteur de l'article"
+          }
+        }
+      },
+      "Author": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "description": "ID unique de l'auteur"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nom complet de l'auteur"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug URL de l'auteur"
+          },
+          "role": {
+            "type": "string",
+            "description": "Rôle/titre de l'auteur"
+          },
+          "bio": {
+            "type": "string",
+            "description": "Biographie courte"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email de l'auteur"
+          },
+          "expertise": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Domaines d'expertise"
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "Auteur vérifié"
+          }
+        }
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "page": {
+                "type": "integer"
+              },
+              "pageSize": {
+                "type": "integer"
+              },
+              "pageCount": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

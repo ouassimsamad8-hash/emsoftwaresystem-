@@ -1,0 +1,304 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "E&M Software Blog API",
+    "description": "API complète pour le blog E&M Software - Articles, Auteurs, Catégories, Recherche",
+    "version": "1.0.0",
+    "contact": {
+      "name": "E&M Software",
+      "email": "contact@emsoftware.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:1337/api",
+      "description": "Serveur de développement local"
+    },
+    {
+      "url": "https://api.emsoftware.com/api",
+      "description": "Serveur de production"
+    }
+  ],
+  "paths": {
+    "/blog-posts": {
+      "get": {
+        "operationId": "listBlogPosts",
+        "summary": "Liste les articles du blog",
+        "description": "Récupère une liste paginée d'articles avec leurs auteurs, catégories et métadonnées complètes",
+        "tags": ["Articles"],
+        "parameters": [
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "Relations à inclure (author, featuredImage, etc.)",
+            "schema": {
+              "type": "string",
+              "default": "author"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Tri des résultats (field:asc ou field:desc)",
+            "schema": {
+              "type": "string",
+              "default": "publishedAt:desc"
+            }
+          },
+          {
+            "name": "pagination[page]",
+            "in": "query",
+            "description": "Numéro de page",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pagination[pageSize]",
+            "in": "query",
+            "description": "Nombre d'articles par page",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des articles récupérée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BlogPost"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "operationId": "listAuthors",
+        "summary": "Liste tous les auteurs",
+        "description": "Récupère la liste complète des auteurs avec leurs profils, expertises et statistiques",
+        "tags": ["Auteurs"],
+        "parameters": [
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "Relations à inclure (* pour tout)",
+            "schema": {
+              "type": "string",
+              "default": "*"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des auteurs récupérée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Author"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BlogPost": {
+        "type": "object",
+        "description": "Article de blog complet avec métadonnées",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "description": "Identifiant unique de l'article"
+          },
+          "title_fr": {
+            "type": "string",
+            "description": "Titre de l'article en français"
+          },
+          "content_fr": {
+            "type": "string",
+            "description": "Contenu complet de l'article en Markdown"
+          },
+          "excerpt_fr": {
+            "type": "string",
+            "description": "Résumé court de l'article"
+          },
+          "slug": {
+            "type": "string",
+            "description": "URL slug unique pour l'article"
+          },
+          "category": {
+            "type": "string",
+            "description": "Identifiant de catégorie (ai-ml, web-dev, security, etc.)"
+          },
+          "categoryLabel_fr": {
+            "type": "string",
+            "description": "Label de catégorie en français"
+          },
+          "author": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Author"
+              },
+              {
+                "type": "object",
+                "description": "Référence simple à l'auteur"
+              }
+            ]
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date de publication ISO 8601"
+          },
+          "readTime": {
+            "type": "integer",
+            "description": "Temps de lecture estimé en minutes"
+          },
+          "seoTitle": {
+            "type": "string",
+            "description": "Titre optimisé pour SEO"
+          },
+          "seoDescription": {
+            "type": "string",
+            "description": "Description meta pour SEO"
+          },
+          "seoKeywords": {
+            "type": "string",
+            "description": "Mots-clés SEO séparés par virgules"
+          }
+        }
+      },
+      "Author": {
+        "type": "object",
+        "description": "Profil complet d'un auteur",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "description": "Identifiant unique de l'auteur"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nom complet de l'auteur"
+          },
+          "slug": {
+            "type": "string",
+            "description": "URL slug unique pour l'auteur"
+          },
+          "role": {
+            "type": "string",
+            "description": "Titre professionnel de l'auteur"
+          },
+          "bio": {
+            "type": "string",
+            "description": "Biographie courte"
+          },
+          "fullBio": {
+            "type": "string",
+            "description": "Biographie complète"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email de contact"
+          },
+          "expertise": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Domaines d'expertise"
+          },
+          "social": {
+            "type": "object",
+            "properties": {
+              "linkedin": {
+                "type": "string"
+              },
+              "twitter": {
+                "type": "string"
+              },
+              "github": {
+                "type": "string"
+              }
+            }
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "Auteur vérifié"
+          },
+          "totalViews": {
+            "type": "integer",
+            "description": "Nombre total de vues"
+          },
+          "joinedDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Date d'inscription"
+          }
+        }
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "page": {
+                "type": "integer"
+              },
+              "pageSize": {
+                "type": "integer"
+              },
+              "pageCount": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Token API Strapi pour l'authentification"
+      }
+    }
+  }
+}

@@ -85,8 +85,8 @@ export default function Cookies() {
             </h2>
             <p>
               {t({
-                en: 'If you have any questions about our use of cookies, please contact us at privacy@emsoftware.com.',
-                fr: 'Si vous avez des questions concernant notre utilisation des cookies, veuillez nous contacter à privacy@emsoftware.com.'
+                en: 'If you have any questions about our use of cookies, please contact us at noumoupriso@gmail.com, by phone at +33 6 24 81 09 82, or by mail at 4 Impasse des Jardiniers, 77400 Lagny-sur-Marne, France.',
+                fr: 'Si vous avez des questions concernant notre utilisation des cookies, veuillez nous contacter à l\'adresse noumoupriso@gmail.com, par téléphone au +33 6 24 81 09 82, ou par courrier à l\'adresse 4 Impasse des Jardiniers, 77400 Lagny-sur-Marne, France.'
               })}
             </p>
           </section>

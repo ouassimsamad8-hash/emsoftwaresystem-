@@ -1,8 +1,39 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactSchema, insertAppointmentSchema } from "@shared/schema";
 import { z } from "zod";
+
+// Simple admin authentication middleware
+function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Basic ')) {
+    res.setHeader('WWW-Authenticate', 'Basic realm="Admin Area"');
+    return res.status(401).json({ error: "Authentication required" });
+  }
+
+  const base64Credentials = authHeader.split(' ')[1];
+  const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
+  const [username, password] = credentials.split(':');
+
+  const env = process.env.NODE_ENV ?? 'development';
+  const adminUser = process.env.ADMIN_USERNAME;
+  const adminPass = process.env.ADMIN_PASSWORD;
+
+  if (env === 'production' && (!adminUser || !adminPass)) {
+    throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD must be set in production');
+  }
+
+  const resolvedUser = adminUser || 'ouassim';
+  const resolvedPass = adminPass || 'ouassim';
+
+  if (username === resolvedUser && password === resolvedPass) {
+    next();
+  } else {
+    res.status(403).json({ error: "Invalid credentials" });
+  }
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Contact form submission
@@ -20,8 +51,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all contacts (for admin purposes)
-  app.get("/api/contacts", async (req, res) => {
+  // Get all contacts (for admin purposes) - PROTECTED
+  app.get("/api/contacts", requireAdmin, async (req, res) => {
     try {
       const contacts = await storage.getContacts();
       res.json(contacts);
@@ -45,8 +76,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all appointments (for admin purposes)
-  app.get("/api/appointments", async (req, res) => {
+  // Get all appointments (for admin purposes) - PROTECTED
+  app.get("/api/appointments", requireAdmin, async (req, res) => {
     try {
       const appointments = await storage.getAppointments();
       res.json(appointments);

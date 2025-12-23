@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/lib/language-context';
+import { useAppointment } from '@/components/CalWidget';
+import { SEOHead } from '@/components/SEOHead';
 import { services, projects } from '@/data/content';
 import heroImage from '@assets/generated_images/Hero_team_collaboration_92bcb36d.png';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
@@ -20,6 +22,7 @@ const iconMap: Record<string, any> = {
 
 export default function Home() {
   const { t, language } = useLanguage();
+  const { openModal } = useAppointment();
   const heroRef = useRef(null);
   const statsRef = useRef(null);
   const servicesRef = useRef(null);
@@ -48,6 +51,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      <SEOHead
+        title={t({ en: 'Home', fr: 'Accueil' })}
+        description={t({
+          en: 'Transform your business with innovative software solutions. Expert web, mobile, and cloud development services.',
+          fr: 'Transformez votre entreprise avec des solutions logicielles innovantes. Services experts en développement web, mobile et cloud.'
+        })}
+        keywords={['software development', 'web development', 'mobile apps', 'cloud solutions', 'IT consulting', 'digital transformation']}
+      />
       {/* Hero Section */}
       <section ref={heroRef} className="relative min-h-screen flex items-center pt-16 overflow-hidden" style={{ position: 'relative' }}>
         <motion.div 
@@ -112,14 +123,17 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7 }}
             >
-              <Link href="/book-appointment">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button size="lg" className="gap-2 text-base" data-testid="button-hero-cta">
-                    {t({ en: 'Book Free Consultation', fr: 'Réserver une Consultation Gratuite' })}
-                    <ArrowRight className="h-5 w-5" />
-                  </Button>
-                </motion.div>
-              </Link>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button 
+                  size="lg" 
+                  className="gap-2 text-base" 
+                  data-testid="button-hero-cta"
+                  onClick={openModal}
+                >
+                  {t({ en: 'Book Free Consultation', fr: 'Réserver une Consultation Gratuite' })}
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </motion.div>
               <Link href="/services">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button size="lg" variant="outline" className="gap-2 text-base" data-testid="button-view-services">
@@ -286,7 +300,7 @@ export default function Home() {
                   <Card className="overflow-hidden transition-all duration-300 group hover:shadow-2xl" data-testid={`project-card-${project.slug}`}>
                     <div className="aspect-[4/3] overflow-hidden bg-muted">
                       <motion.img
-                        src={`/attached_assets/generated_images/${project.image}`}
+                        src={`/${project.image}`}
                         alt={project.title[language]}
                         className="w-full h-full object-cover"
                         whileHover={{ scale: 1.1 }}
@@ -369,14 +383,17 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            <Link href="/book-appointment">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="gap-2" data-testid="button-cta-appointment">
-                  {t({ en: 'Book Your Free Consultation', fr: 'Réserver Votre Consultation Gratuite' })}
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-              </motion.div>
-            </Link>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button 
+                size="lg" 
+                className="gap-2" 
+                data-testid="button-cta-appointment"
+                onClick={openModal}
+              >
+                {t({ en: 'Book Your Free Consultation', fr: 'Réserver Votre Consultation Gratuite' })}
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </motion.div>
             <Link href="/contact">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button size="lg" variant="outline" data-testid="button-cta-contact">

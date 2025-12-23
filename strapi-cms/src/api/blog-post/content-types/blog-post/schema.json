@@ -1,0 +1,79 @@
+{
+  "kind": "collectionType",
+  "collectionName": "blog_posts",
+  "info": {
+    "singularName": "blog-post",
+    "pluralName": "blog-posts",
+    "displayName": "Blog Post",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title_fr": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title_fr",
+      "required": true
+    },
+    "excerpt_fr": {
+      "type": "text"
+    },
+    "content_fr": {
+      "type": "richtext",
+      "required": true
+    },
+    "category": {
+      "type": "string"
+    },
+    "categoryLabel_fr": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "files", "videos", "audios"]
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::author.author",
+      "inversedBy": "blog_posts"
+    },
+    "authorName": {
+      "type": "string",
+      "description": "Legacy author name field"
+    },
+    "publishedAt": {
+      "type": "datetime"
+    },
+        "readTime": {
+            "type": "integer"
+        },
+        "seoTitle": {
+            "type": "string"
+        },
+        "seoDescription": {
+            "type": "text"
+        },
+        "seoKeywords": {
+            "type": "text"
+        },
+        "authorAvatar": {
+            "type": "string"
+        },
+        "featuredImage": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images"
+            ]
+        }
+    }
+}

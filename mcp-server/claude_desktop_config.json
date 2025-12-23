@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "emsoftware-blog": {
+      "command": "node",
+      "args": [
+        "/Users/asf/emsoftwaresystem-/mcp-server/build/index.js"
+      ],
+      "env": {
+        "STRAPI_URL": "http://localhost:1337"
+      }
+    }
+  }
+}

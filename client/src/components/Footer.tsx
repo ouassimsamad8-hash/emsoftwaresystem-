@@ -1,5 +1,5 @@
 import { Link } from 'wouter';
-import { Mail, Phone, MapPin, Linkedin, Github, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Instagram, Facebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/lib/language-context';
@@ -24,18 +24,33 @@ export function Footer() {
             </div>
             <div className="flex gap-2">
               <Button variant="ghost" size="icon" asChild data-testid="link-linkedin">
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <a
+                  href="https://www.linkedin.com/in/emsoftware-system-955847396/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                >
                   <Linkedin className="h-4 w-4" />
                 </a>
               </Button>
-              <Button variant="ghost" size="icon" asChild data-testid="link-github">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                  <Github className="h-4 w-4" />
+              <Button variant="ghost" size="icon" asChild data-testid="link-instagram">
+                <a
+                  href="https://www.instagram.com/emsoftwaresystem?igsh=MTJ6ZjJlejN1Y2ViZQ=="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-4 w-4" />
                 </a>
               </Button>
-              <Button variant="ghost" size="icon" asChild data-testid="link-twitter">
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                  <Twitter className="h-4 w-4" />
+              <Button variant="ghost" size="icon" asChild data-testid="link-facebook">
+                <a
+                  href="https://www.facebook.com/share/195xG96Fwa/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-4 w-4" />
                 </a>
               </Button>
             </div>
@@ -107,15 +122,15 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-muted-foreground mb-4">
               <li className="flex items-start gap-2">
                 <Mail className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span>contact@emsoftware.com</span>
+                <span>noumoupriso@gmail.com</span>
               </li>
               <li className="flex items-start gap-2">
                 <Phone className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span>+1 (555) 123-4567</span>
+                <span>+33 6 24 81 09 82</span>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span>123 Tech Street, Innovation City</span>
+                <span>4 Impasse des Jardiniers, 77400 Lagny-sur-Marne, France</span>
               </li>
             </ul>
             <div className="space-y-2">

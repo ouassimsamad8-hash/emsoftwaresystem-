@@ -54,19 +54,21 @@ export default function BookAppointment() {
         description: t({
           en: 'We\'ll send you a confirmation email shortly.',
           fr: 'Nous vous enverrons un email de confirmation sous peu.'
-        })
+        }),
+        duration: 5000
       });
       form.reset();
       queryClient.invalidateQueries({ queryKey: ['/api/appointments'] });
     },
-    onError: () => {
+    onError: (error: Error) => {
       toast({
         variant: 'destructive',
         title: t({ en: 'Error', fr: 'Erreur' }),
-        description: t({
+        description: error.message || t({
           en: 'Failed to book appointment. Please try again.',
           fr: 'Échec de la réservation du rendez-vous. Veuillez réessayer.'
-        })
+        }),
+        duration: 7000
       });
     }
   });
@@ -203,7 +205,11 @@ export default function BookAppointment() {
                             <FormItem>
                               <FormLabel>{t({ en: 'Phone', fr: 'Téléphone' })} *</FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder={t({ en: '+1 (555) 123-4567', fr: '+1 (555) 123-4567' })} data-testid="input-phone" />
+                                <Input
+                                  {...field}
+                                  placeholder={t({ en: '+33 6 24 81 09 82', fr: '+33 6 24 81 09 82' })}
+                                  data-testid="input-phone"
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -217,7 +223,12 @@ export default function BookAppointment() {
                             <FormItem>
                               <FormLabel>{t({ en: 'Company', fr: 'Entreprise' })}</FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder={t({ en: 'Company name', fr: 'Nom de l\'entreprise' })} data-testid="input-company" />
+                                <Input
+                                  {...field}
+                                  value={field.value ?? ''}
+                                  placeholder={t({ en: 'Company name', fr: 'Nom de l\'entreprise' })}
+                                  data-testid="input-company"
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -309,7 +320,10 @@ export default function BookAppointment() {
 
                       <Button type="submit" size="lg" className="w-full gap-2" disabled={appointmentMutation.isPending} data-testid="button-submit">
                         {appointmentMutation.isPending ? (
-                          t({ en: 'Booking...', fr: 'Réservation...' })
+                          <>
+                            <div className="h-5 w-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                            {t({ en: 'Booking...', fr: 'Réservation...' })}
+                          </>
                         ) : (
                           <>
                             <Calendar className="h-5 w-5" />
@@ -317,6 +331,21 @@ export default function BookAppointment() {
                           </>
                         )}
                       </Button>
+                      {appointmentMutation.isSuccess && (
+                        <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-3">
+                          <div className="h-5 w-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                            <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <p className="text-sm text-green-800 dark:text-green-200">
+                            {t({
+                              en: 'Your appointment has been booked successfully! Check your email for confirmation.',
+                              fr: 'Votre rendez-vous a été réservé avec succès ! Vérifiez votre email pour la confirmation.'
+                            })}
+                          </p>
+                        </div>
+                      )}
                     </form>
                   </Form>
                 </CardContent>

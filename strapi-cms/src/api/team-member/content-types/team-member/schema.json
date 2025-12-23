@@ -1,0 +1,59 @@
+{
+  "kind": "collectionType",
+  "collectionName": "team_members",
+  "info": {
+    "singularName": "team-member",
+    "pluralName": "team-members",
+    "displayName": "Team Member",
+    "description": "Team members of E&M Software System"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "role_fr": {
+      "type": "string",
+      "required": true
+    },
+    "role_en": {
+      "type": "string",
+      "required": true
+    },
+    "bio_fr": {
+      "type": "text",
+      "required": true
+    },
+    "bio_en": {
+      "type": "text",
+      "required": true
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "email": {
+      "type": "email"
+    },
+    "linkedin": {
+      "type": "string"
+    },
+    "twitter": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "expertise": {
+      "type": "json",
+      "description": "Array of expertise areas"
+    }
+  }
+}

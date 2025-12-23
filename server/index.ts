@@ -1,8 +1,47 @@
+import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
+import { registerAdminRoutes } from "./admin-routes";
 import { setupVite, serveStatic, log } from "./vite";
+import rateLimit from "express-rate-limit";
+import cors from "cors";
+import helmet from "helmet";
 
 const app = express();
+
+// Security middleware
+app.use(helmet({
+  contentSecurityPolicy: app.get("env") === "production" ? undefined : false,
+  crossOriginEmbedderPolicy: false,
+}));
+
+// CORS configuration
+const corsOptions = {
+  origin: process.env.NODE_ENV === "production"
+    ? process.env.ALLOWED_ORIGINS?.split(",") || []
+    : true,
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const strictLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit form submissions to 10 per 15 minutes
+  message: "Too many submissions, please try again later.",
+});
+
+app.use("/api/", limiter);
+app.use("/api/contact", strictLimiter);
+app.use("/api/appointments", strictLimiter);
 
 declare module 'http' {
   interface IncomingMessage {
@@ -48,13 +87,16 @@ app.use((req, res, next) => {
 
 (async () => {
   const server = await registerRoutes(app);
+  
+  // Register admin routes
+  registerAdminRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    throw err;
+    log(`ERR ${req.method} ${req.path} ${status}: ${message}`, "error");
   });
 
   // importantly only setup vite in development and after
@@ -71,11 +113,7 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
   });
 })();

@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "appointment_requests",
+  "info": {
+    "singularName": "appointment-request",
+    "pluralName": "appointment-requests",
+    "displayName": "Appointment Request",
+    "description": "Customer appointment booking requests"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fullName": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "message": {
+      "type": "text"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "contacted", "scheduled", "cancelled"],
+      "default": "pending"
+    }
+  }
+}

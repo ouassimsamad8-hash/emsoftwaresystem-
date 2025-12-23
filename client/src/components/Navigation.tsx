@@ -1,14 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Menu, X, Calendar } from 'lucide-react';
+import { Menu, X, Calendar, Sun, Moon, Monitor } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useLanguage } from '@/lib/language-context';
+import { useAppointment } from '@/components/CalWidget';
+import { useTheme } from '@/lib/theme-context';
+import { useSiteSettings } from '@/hooks/use-site-settings';
 import { menuItems } from '@/data/content';
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
+  const { theme, setTheme } = useTheme();
+  const { openModal } = useAppointment();
+  const { data: siteSettings } = useSiteSettings();
   const [location] = useLocation();
 
   useEffect(() => {
@@ -22,6 +34,20 @@ export function Navigation() {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
+
+  // Update favicon when site settings change
+  useEffect(() => {
+    if (siteSettings?.favicon) {
+      const existing = document.querySelector("link[rel*='icon']");
+      const link = existing instanceof HTMLLinkElement ? existing : document.createElement('link');
+      link.type = 'image/x-icon';
+      link.rel = 'shortcut icon';
+      link.href = siteSettings.favicon.url;
+      if (!existing) {
+        document.getElementsByTagName('head')[0].appendChild(link);
+      }
+    }
+  }, [siteSettings?.favicon]);
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'fr' : 'en');
@@ -39,10 +65,20 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2" data-testid="link-home">
-            <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-tight text-foreground">E&M Software</span>
-              <span className="text-xs text-muted-foreground">System</span>
-            </div>
+            {siteSettings?.logo || siteSettings?.logoLight ? (
+              <img
+                src={theme === 'dark' && siteSettings?.logoLight ? siteSettings.logoLight.url : siteSettings?.logo?.url}
+                alt={siteSettings?.siteName || 'E&M Software System'}
+                className="h-10 w-auto object-contain"
+              />
+            ) : (
+              <div className="flex flex-col">
+                <span className="text-xl font-bold tracking-tight text-foreground">
+                  {siteSettings?.siteName || 'E&M Software'}
+                </span>
+                <span className="text-xs text-muted-foreground">System</span>
+              </div>
+            )}
           </Link>
 
           {/* Desktop Menu */}
@@ -62,6 +98,31 @@ export function Navigation() {
 
           {/* Right Side Actions */}
           <div className="hidden md:flex items-center gap-2">
+            {/* Theme Toggle */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" data-testid="button-theme-toggle">
+                  {theme === 'light' && <Sun className="h-5 w-5" />}
+                  {theme === 'dark' && <Moon className="h-5 w-5" />}
+                  {theme === 'system' && <Monitor className="h-5 w-5" />}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme('light')}>
+                  <Sun className="h-4 w-4 mr-2" />
+                  {t({ en: 'Light', fr: 'Clair' })}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('dark')}>
+                  <Moon className="h-4 w-4 mr-2" />
+                  {t({ en: 'Dark', fr: 'Sombre' })}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('system')}>
+                  <Monitor className="h-4 w-4 mr-2" />
+                  {t({ en: 'System', fr: 'Système' })}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {/* Language Toggle */}
             <Button
               variant="ghost"
@@ -74,12 +135,14 @@ export function Navigation() {
             </Button>
 
             {/* Book Appointment CTA */}
-            <Link href="/book-appointment">
-              <Button className="gap-2" data-testid="button-book-appointment">
-                <Calendar className="h-4 w-4" />
-                {t({ en: 'Book Appointment', fr: 'Prendre RDV' })}
-              </Button>
-            </Link>
+            <Button 
+              className="gap-2" 
+              data-testid="button-book-appointment"
+              onClick={openModal}
+            >
+              <Calendar className="h-4 w-4" />
+              {t({ en: 'Book Appointment', fr: 'Prendre RDV' })}
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -120,12 +183,17 @@ export function Navigation() {
                 </Button>
               </Link>
             ))}
-            <Link href="/book-appointment">
-              <Button className="w-full gap-2" data-testid="button-book-appointment-mobile">
-                <Calendar className="h-4 w-4" />
-                {t({ en: 'Book Appointment', fr: 'Prendre RDV' })}
-              </Button>
-            </Link>
+            <Button 
+              className="w-full gap-2" 
+              data-testid="button-book-appointment-mobile"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                openModal();
+              }}
+            >
+              <Calendar className="h-4 w-4" />
+              {t({ en: 'Book Appointment', fr: 'Prendre RDV' })}
+            </Button>
           </div>
         </div>
       )}

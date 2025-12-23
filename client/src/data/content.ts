@@ -285,6 +285,114 @@ export const projects: Project[] = [
       { en: '2x improvement in campaign ROI', fr: 'Amélioration de 2x du ROI des campagnes' }
     ],
     screenshots: ['Web_app_dashboard_d564f681.png', 'Enterprise_software_dashboard_9e058f15.png']
+  },
+  {
+    id: '7',
+    slug: 'ai-assistant-for-sme',
+    title: { en: 'AI Assistant for SMEs', fr: 'Assistant IA pour PME' },
+    category: 'custom',
+    categoryLabel: { en: 'Custom Software', fr: 'Logiciel Sur Mesure' },
+    description: { en: 'Intelligent virtual assistant to automate business operations for small and medium enterprises', fr: 'Assistant virtuel intelligent pour automatiser les opérations commerciales des petites et moyennes entreprises' },
+    image: 'Enterprise_software_dashboard_9e058f15.png',
+    technologies: ['React', 'Python', 'OpenAI GPT', 'FastAPI', 'PostgreSQL'],
+    challenge: { en: 'Small businesses needed an affordable AI solution to handle customer inquiries, schedule management, and data analysis without hiring additional staff.', fr: 'Les petites entreprises avaient besoin d\'une solution IA abordable pour gérer les demandes des clients, la gestion des horaires et l\'analyse de données sans embaucher de personnel supplémentaire.' },
+    solution: { en: 'Built an AI-powered assistant using GPT models with custom training on business-specific data, integrated with existing tools like calendars, email, and CRM systems.', fr: 'Construction d\'un assistant alimenté par IA utilisant des modèles GPT avec formation personnalisée sur des données spécifiques à l\'entreprise, intégré aux outils existants comme les calendriers, emails et systèmes CRM.' },
+    results: [
+      { en: '75% reduction in response time to customer inquiries', fr: 'Réduction de 75% du temps de réponse aux demandes clients' },
+      { en: '40% decrease in operational costs', fr: 'Diminution de 40% des coûts opérationnels' },
+      { en: 'Handling 1000+ inquiries per day automatically', fr: 'Traitement de 1000+ demandes par jour automatiquement' }
+    ],
+    screenshots: ['Enterprise_software_dashboard_9e058f15.png', 'Web_app_dashboard_d564f681.png']
+  },
+  {
+    id: '8',
+    slug: 'predictive-maintenance-iot',
+    title: { en: 'Predictive Maintenance IoT System', fr: 'Système IoT de Maintenance Prédictive' },
+    category: 'custom',
+    categoryLabel: { en: 'Custom Software', fr: 'Logiciel Sur Mesure' },
+    description: { en: 'IoT-based AI system for predicting equipment failures in manufacturing', fr: 'Système IA basé sur l\'IoT pour prédire les pannes d\'équipement en fabrication' },
+    image: 'Cloud_platform_dashboard_86d0bb3f.png',
+    technologies: ['React', 'Python', 'TensorFlow', 'MQTT', 'InfluxDB', 'AWS IoT'],
+    challenge: { en: 'Manufacturing plant experienced frequent unexpected equipment breakdowns causing production delays and high maintenance costs.', fr: 'L\'usine de fabrication subissait de fréquentes pannes d\'équipement inattendues causant des retards de production et des coûts de maintenance élevés.' },
+    solution: { en: 'Deployed IoT sensors across equipment with ML models analyzing real-time data patterns to predict failures 48-72 hours in advance, enabling preventive maintenance.', fr: 'Déploiement de capteurs IoT sur les équipements avec des modèles ML analysant les modèles de données en temps réel pour prédire les pannes 48-72 heures à l\'avance, permettant une maintenance préventive.' },
+    results: [
+      { en: '85% reduction in unplanned downtime', fr: 'Réduction de 85% des temps d\'arrêt non planifiés' },
+      { en: '50% decrease in maintenance costs', fr: 'Diminution de 50% des coûts de maintenance' },
+      { en: 'ROI achieved in 6 months', fr: 'ROI atteint en 6 mois' }
+    ],
+    screenshots: ['Cloud_platform_dashboard_86d0bb3f.png', 'Enterprise_software_dashboard_9e058f15.png']
+  },
+  {
+    id: '9',
+    slug: 'automated-document-processing',
+    title: { en: 'Automated Document Processing with AI', fr: 'Traitement Automatisé de Documents avec IA' },
+    category: 'custom',
+    categoryLabel: { en: 'Custom Software', fr: 'Logiciel Sur Mesure' },
+    description: { en: 'AI-powered system for extracting and processing data from documents', fr: 'Système alimenté par IA pour extraire et traiter les données des documents' },
+    image: 'Web_app_dashboard_d564f681.png',
+    technologies: ['React', 'Python', 'Tesseract OCR', 'spaCy', 'FastAPI', 'MongoDB'],
+    challenge: { en: 'Financial services company manually processed thousands of documents daily, leading to errors, delays, and high labor costs.', fr: 'Une société de services financiers traitait manuellement des milliers de documents par jour, entraînant des erreurs, des retards et des coûts de main-d\'œuvre élevés.' },
+    solution: { en: 'Developed an AI system using OCR and NLP to automatically extract, classify, and validate information from invoices, contracts, and forms with 98% accuracy.', fr: 'Développement d\'un système IA utilisant OCR et NLP pour extraire, classifier et valider automatiquement les informations des factures, contrats et formulaires avec 98% de précision.' },
+    results: [
+      { en: '90% reduction in processing time', fr: 'Réduction de 90% du temps de traitement' },
+      { en: '95% decrease in data entry errors', fr: 'Diminution de 95% des erreurs de saisie' },
+      { en: 'Processing 10,000+ documents daily', fr: 'Traitement de 10 000+ documents par jour' }
+    ],
+    screenshots: ['Web_app_dashboard_d564f681.png', 'Enterprise_software_dashboard_9e058f15.png']
+  },
+  {
+    id: '10',
+    slug: 'personalized-learning-platform',
+    title: { en: 'AI-Powered Personalized Learning Platform', fr: 'Plateforme d\'Apprentissage Personnalisée par IA' },
+    category: 'web',
+    categoryLabel: { en: 'Web Development', fr: 'Développement Web' },
+    description: { en: 'Adaptive learning platform using AI to personalize education content', fr: 'Plateforme d\'apprentissage adaptative utilisant l\'IA pour personnaliser le contenu éducatif' },
+    image: 'Project_management_software_c23ed5e4.png',
+    technologies: ['Next.js', 'Python', 'TensorFlow', 'PostgreSQL', 'Redis', 'WebRTC'],
+    challenge: { en: 'Educational institution struggled with one-size-fits-all approach, resulting in poor student engagement and inconsistent learning outcomes.', fr: 'L\'institution éducative était aux prises avec une approche universelle, entraînant un faible engagement des étudiants et des résultats d\'apprentissage incohérents.' },
+    solution: { en: 'Created an adaptive platform that analyzes student performance and learning patterns to deliver personalized content, pacing, and assessments in real-time.', fr: 'Création d\'une plateforme adaptative qui analyse les performances et les modèles d\'apprentissage des étudiants pour fournir du contenu, un rythme et des évaluations personnalisés en temps réel.' },
+    results: [
+      { en: '60% improvement in student engagement', fr: 'Amélioration de 60% de l\'engagement des étudiants' },
+      { en: '45% increase in course completion rates', fr: 'Augmentation de 45% des taux d\'achèvement des cours' },
+      { en: '50,000+ active students', fr: '50 000+ étudiants actifs' }
+    ],
+    screenshots: ['Project_management_software_c23ed5e4.png', 'Web_app_dashboard_d564f681.png']
+  },
+  {
+    id: '11',
+    slug: 'smart-inventory-optimization',
+    title: { en: 'Smart Inventory Optimization System', fr: 'Système d\'Optimisation d\'Inventaire Intelligent' },
+    category: 'custom',
+    categoryLabel: { en: 'Custom Software', fr: 'Logiciel Sur Mesure' },
+    description: { en: 'AI-driven inventory management system for retail chains', fr: 'Système de gestion d\'inventaire piloté par IA pour chaînes de vente au détail' },
+    image: 'Ecommerce_platform_interface_1b61c289.png',
+    technologies: ['Vue.js', 'Python', 'PyTorch', 'PostgreSQL', 'Apache Kafka'],
+    challenge: { en: 'Retail chain faced chronic stock issues with overstocking in some locations and shortages in others, leading to lost sales and waste.', fr: 'La chaîne de vente au détail était confrontée à des problèmes chroniques de stock avec surstockage dans certains endroits et pénuries dans d\'autres, entraînant des ventes perdues et du gaspillage.' },
+    solution: { en: 'Implemented ML models analyzing sales patterns, seasonality, local events, and weather to optimize inventory levels and automate reordering across all locations.', fr: 'Implémentation de modèles ML analysant les modèles de ventes, la saisonnalité, les événements locaux et la météo pour optimiser les niveaux d\'inventaire et automatiser les réapprovisionnements dans tous les emplacements.' },
+    results: [
+      { en: '35% reduction in excess inventory', fr: 'Réduction de 35% de l\'inventaire excédentaire' },
+      { en: '25% decrease in stockouts', fr: 'Diminution de 25% des ruptures de stock' },
+      { en: '20% increase in profit margins', fr: 'Augmentation de 20% des marges bénéficiaires' }
+    ],
+    screenshots: ['Ecommerce_platform_interface_1b61c289.png', 'Web_app_dashboard_d564f681.png']
+  },
+  {
+    id: '12',
+    slug: 'voice-commerce-assistant',
+    title: { en: 'Voice Commerce AI Assistant', fr: 'Assistant IA de Commerce Vocal' },
+    category: 'mobile',
+    categoryLabel: { en: 'Mobile Apps', fr: 'Applications Mobiles' },
+    description: { en: 'Voice-activated AI shopping assistant for mobile e-commerce', fr: 'Assistant d\'achat IA activé par la voix pour e-commerce mobile' },
+    image: 'Mobile_app_mockup_b758143d.png',
+    technologies: ['React Native', 'Python', 'Google Speech API', 'OpenAI', 'Node.js'],
+    challenge: { en: 'E-commerce company wanted to make shopping more accessible and convenient for users on-the-go without typing.', fr: 'Une société d\'e-commerce voulait rendre les achats plus accessibles et pratiques pour les utilisateurs en déplacement sans saisie.' },
+    solution: { en: 'Built a voice-activated shopping assistant that understands natural language, provides product recommendations, and processes orders through voice commands.', fr: 'Construction d\'un assistant d\'achat activé par la voix qui comprend le langage naturel, fournit des recommandations de produits et traite les commandes par commandes vocales.' },
+    results: [
+      { en: '300% increase in mobile conversions', fr: 'Augmentation de 300% des conversions mobiles' },
+      { en: '40% higher average order value', fr: '40% de valeur moyenne de commande plus élevée' },
+      { en: '4.9/5 user satisfaction rating', fr: 'Note de satisfaction utilisateur de 4,9/5' }
+    ],
+    screenshots: ['Mobile_app_mockup_b758143d.png', 'Web_app_dashboard_d564f681.png']
   }
 ];
 
@@ -482,3 +590,75 @@ export const menuItems = {
     { label: 'Contact', path: '/contact' }
   ]
 };
+
+// Team Members
+export interface TeamMember {
+  id: string;
+  name: string;
+  role: Translation;
+  bio: Translation;
+  avatar: string;
+  email?: string;
+  phone?: string;
+  linkedin?: string;
+  twitter?: string;
+  expertise: string[];
+  order: number;
+}
+
+export const teamMembers: TeamMember[] = [
+  {
+    id: '1',
+    name: 'Ouassim Samad',
+    role: {
+      en: 'Marketing and Communication Manager',
+      fr: 'Responsable Marketing et Communication'
+    },
+    bio: {
+      en: 'Visionary leader with extensive experience in software development and business strategy. Ouassim founded E&M Software System with a mission to deliver innovative solutions.',
+      fr: 'Leader visionnaire avec une vaste expérience en développement logiciel et stratégie d\'entreprise. Ouassim a fondé E&M Software System avec pour mission de fournir des solutions innovantes.'
+    },
+    avatar: '/avatars/ouassim-samad.jpg',
+    email: 'ouassim.samad@emsoftware.com',
+    phone: '+33 6 24 81 09 82',
+    linkedin: 'https://www.linkedin.com/in/ouassim-samad-0941672b2',
+    expertise: ['Leadership', 'Strategy', 'Innovation', 'Client Relations'],
+    order: 1
+  },
+  {
+    id: '2',
+    name: 'Noumou Priso',
+    role: {
+      en: 'Chief Technology Officer',
+      fr: 'Directeur Technique'
+    },
+    bio: {
+      en: 'Expert in cloud architecture and scalable systems. Noumou ensures our technical solutions meet the highest standards of quality and performance.',
+      fr: 'Expert en architecture cloud et systèmes évolutifs. Noumou garantit que nos solutions techniques répondent aux normes les plus élevées de qualité et de performance.'
+    },
+    avatar: '/avatars/noumou-priso.jpg',
+    email: 'noumoupriso@gmail.com',
+    phone: '+33 6 24 81 09 82',
+    linkedin: 'https://www.linkedin.com/in/emsoftware-system-955847396/',
+    expertise: ['Cloud Architecture', 'DevOps', 'System Design', 'Security'],
+    order: 2
+  },
+  {
+    id: '3',
+    name: 'Ebono Eugene',
+    role: {
+      en: 'Software Engineer',
+      fr: 'Ingénieur Logiciel'
+    },
+    bio: {
+      en: 'Experienced software engineer focused on building reliable, high-quality digital solutions for our clients.',
+      fr: 'Ingénieur logiciel expérimenté, spécialisé dans la création de solutions numériques fiables et de haute qualité pour nos clients.'
+    },
+    avatar: '/avatars/ebono-eugene.jpg',
+    email: 'noumoupriso@gmail.com',
+    phone: '+33 6 24 81 09 82',
+    linkedin: 'https://www.linkedin.com/in/emsoftware-system-955847396/',
+    expertise: ['Software Engineering', 'Web Development'],
+    order: 3
+  }
+];

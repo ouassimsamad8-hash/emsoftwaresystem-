@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "services",
+  "info": {
+    "singularName": "service",
+    "pluralName": "services",
+    "displayName": "Service",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title_fr": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title_fr",
+      "required": true
+    },
+    "icon": {
+      "type": "string"
+    },
+    "shortDescription_fr": {
+      "type": "text",
+      "required": true
+    },
+    "fullDescription_fr": {
+      "type": "richtext"
+    },
+    "features_fr": {
+      "type": "json"
+    },
+    "benefits_fr": {
+      "type": "json"
+    }
+  }
+}

@@ -66,7 +66,7 @@ export default function Projects() {
                 <Card className="overflow-hidden hover-elevate active-elevate-2 transition-all duration-300 group" data-testid={`project-card-${project.slug}`}>
                   <div className="aspect-[4/3] overflow-hidden bg-muted">
                     <img
-                      src={`/attached_assets/generated_images/${project.image}`}
+                      src={`/${project.image}`}
                       alt={project.title[language]}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />

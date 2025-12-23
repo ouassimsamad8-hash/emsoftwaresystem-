@@ -7,18 +7,30 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/lib/language-context';
-import { faqs } from '@/data/content';
+import { useFAQs } from '@/hooks/use-faqs';
 import { Link } from 'wouter';
 
 export default function FAQ() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState('all');
+  const { data: faqs, isLoading } = useFAQs();
+
+  if (isLoading || !faqs) {
+    return (
+      <div className="min-h-screen pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Chargement des questions...</p>
+        </div>
+      </div>
+    );
+  }
 
   const categories = [
-    { id: 'all', label: t({ en: 'All Questions', fr: 'Toutes les Questions' }) },
+    { id: 'all', label: 'Toutes les Questions' },
     ...Array.from(new Set(faqs.map(faq => faq.category))).map(cat => {
       const faq = faqs.find(f => f.category === cat);
-      return { id: cat, label: faq!.categoryLabel[language] };
+      return { id: cat, label: faq!.categoryLabel };
     })
   ];
 
@@ -74,11 +86,11 @@ export default function FAQ() {
               >
                 <AccordionTrigger className="text-left hover:no-underline py-6">
                   <span className="text-lg font-semibold text-foreground pr-4">
-                    {faq.question[language]}
+                    {faq.question}
                   </span>
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground pb-6 leading-relaxed">
-                  {faq.answer[language]}
+                  {faq.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
@@ -107,11 +119,15 @@ export default function FAQ() {
                 {t({ en: 'Contact Us', fr: 'Nous Contacter' })}
               </Button>
             </Link>
-            <Link href="/book-appointment">
-              <Button size="lg" variant="outline" data-testid="button-cta-appointment">
-                {t({ en: 'Book Consultation', fr: 'Réserver une Consultation' })}
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              data-testid="button-cta-appointment"
+              data-cal-link="emsoftware-system-dlwqri/30min"
+              data-cal-config='{"layout":"column_view"}'
+            >
+              {t({ en: 'Book Consultation', fr: 'Réserver une Consultation' })}
+            </Button>
           </div>
         </div>
       </section>

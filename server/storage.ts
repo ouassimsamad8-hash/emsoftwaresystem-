@@ -25,8 +25,13 @@ export class MemStorage implements IStorage {
   // Contact methods
   async createContact(insertContact: InsertContact): Promise<Contact> {
     const id = randomUUID();
+    const { language = "en", ...rest } = insertContact;
+    const { phone = null, serviceInterest = null, ...base } = rest;
     const contact: Contact = {
-      ...insertContact,
+      language,
+      phone,
+      serviceInterest,
+      ...base,
       id,
       createdAt: new Date()
     };
@@ -47,8 +52,12 @@ export class MemStorage implements IStorage {
   // Appointment methods
   async createAppointment(insertAppointment: InsertAppointment): Promise<Appointment> {
     const id = randomUUID();
+    const { language = "en", ...rest } = insertAppointment;
+    const { company = null, ...base } = rest;
     const appointment: Appointment = {
-      ...insertAppointment,
+      company,
+      ...base,
+      language,
       id,
       createdAt: new Date()
     };

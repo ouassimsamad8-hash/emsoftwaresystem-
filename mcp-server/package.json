@@ -1,0 +1,33 @@
+{
+  "name": "@emsoftware/blog-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP Server for E&M Software Blog - Interact with blog articles, authors, and content",
+  "type": "module",
+  "bin": {
+    "emsoftware-blog-mcp": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "watch": "tsx watch src/index.ts",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "blog",
+    "strapi",
+    "emsoftware"
+  ],
+  "author": "E&M Software",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
